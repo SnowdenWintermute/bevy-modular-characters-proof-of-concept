@@ -27,7 +27,6 @@ pub fn spawn_scenes(
     let mut animations = HashMap::new();
     let mut scene_entities_by_name = HashMap::new();
 
-    // let mut x = 0.0;
     // SPAWN SCENES
     for (name, gltf_handle) in &asset_pack.gltf_files {
         if let Some(gltf) = assets_gltf.get(gltf_handle) {
@@ -58,7 +57,6 @@ pub fn spawn_scenes(
                 );
             }
         }
-        // x += 2.0;
     }
 
     commands.insert_resource(Animations(animations));
