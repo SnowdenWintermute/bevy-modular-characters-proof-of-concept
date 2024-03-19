@@ -1,0 +1,13 @@
+[package]
+name = "modular_characters_bevy_proof_of_concept"
+version = "0.1.0"
+edition = "2021"
+
+[profile.dev]
+opt-level = 1
+
+[dependencies]
+bevy = { version = "0.13.0", features = ["dynamic_linking"] }
+bevy_panorbit_camera = "0.16.0"
+bevy_mod_billboard = { git = "https://github.com/kulkalkul/bevy_mod_billboard" }
+bevy_asset_loader ="0.20"
