@@ -1,8 +1,11 @@
-use bevy::{prelude::*, utils::HashMap};
-
-use crate::modular_character_plugin::assemble_parts::{
-    collect_bones::collect_bones, find_child_with_name_containing::find_child_with_name_containing,
+use crate::modular_character_plugin::{
+    assemble_parts::{
+        collect_bones::collect_bones,
+        find_child_with_name_containing::find_child_with_name_containing,
+    },
+    AttachedPartsReparentedEntities,
 };
+use bevy::{prelude::*, utils::HashMap};
 
 pub fn attach_part_to_main_skeleton(
     commands: &mut Commands,
@@ -13,8 +16,10 @@ pub fn attach_part_to_main_skeleton(
     part_scene_entity: &Entity,
     main_armature_entity: &Entity,
     main_skeleton_bones: &HashMap<String, Entity>,
+    attached_parts_reparented_entities: &mut ResMut<AttachedPartsReparentedEntities>,
 ) {
     println!("attaching part: {}", part_scene_name);
+    let mut reparented_entities = Vec::new();
 
     let root_bone_option = find_child_with_name_containing(
         all_entities_with_children,
@@ -39,6 +44,7 @@ pub fn attach_part_to_main_skeleton(
             transform.rotation = Quat::from_xyzw(0.0, 0.0, 0.0, 0.0);
         }
 
+        reparented_entities.push(part_armature);
         part_armature_entity_commands.set_parent(*main_armature_entity);
     }
 
@@ -63,8 +69,13 @@ pub fn attach_part_to_main_skeleton(
                     transform.rotation = Quat::from_xyzw(0.0, 0.0, 0.0, 0.0);
                 }
 
+                reparented_entities.push(part_bone);
                 entity_commands.set_parent(*new_parent);
             }
         }
+
+        attached_parts_reparented_entities
+            .parts_and_entities
+            .insert(part_scene_name.clone(), reparented_entities);
     }
 }

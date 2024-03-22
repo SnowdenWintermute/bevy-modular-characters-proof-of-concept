@@ -24,7 +24,7 @@ pub fn paint_cubes_on_joints(
         .font_files
         .get("FiraSans-Regular.ttf")
         .expect("to have loaded the font");
-
+    let mut y = 0.0;
     for scene_entity in &scene_query {
         for entity in all_entities_with_children.iter_descendants(scene_entity) {
             if let Err(_) = mesh_handles.get(entity) {
@@ -48,7 +48,7 @@ pub fn paint_cubes_on_joints(
                     entity_commands.set_parent(entity);
 
                     let mut billboard_entity_commands = commands.spawn(BillboardTextBundle {
-                        transform: Transform::from_xyz(0.0, 0.01, 0.0)
+                        transform: Transform::from_xyz(0.0, 0.01 + y, 0.0)
                             .with_scale(Vec3::splat(0.0005)),
                         text: Text::from_sections([TextSection {
                             value: name,
@@ -65,5 +65,7 @@ pub fn paint_cubes_on_joints(
                 }
             }
         }
+
+        y += 0.01
     }
 }

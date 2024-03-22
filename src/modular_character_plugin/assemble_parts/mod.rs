@@ -1,5 +1,6 @@
 mod attach_part_to_main_skeleton;
 mod collect_bones;
+pub mod despawn_attached_part;
 mod find_child_with_name_containing;
 mod get_main_skeleton_bones_and_armature;
 use self::{
@@ -7,7 +8,10 @@ use self::{
     get_main_skeleton_bones_and_armature::get_main_skeleton_bones_and_armature,
 };
 
-use super::spawn_scenes::{SceneEntitiesByName, SceneName};
+use super::{
+    spawn_scenes::{SceneEntitiesByName, SceneName},
+    AttachedPartsReparentedEntities,
+};
 use bevy::prelude::*;
 
 pub fn assemble_parts(
@@ -17,6 +21,7 @@ pub fn assemble_parts(
     scene_entities_by_name: Res<SceneEntitiesByName>,
     mut transforms: Query<&mut Transform>,
     names: Query<&Name>,
+    mut attached_parts_reparented_entities: ResMut<AttachedPartsReparentedEntities>,
 ) {
     let (main_skeleton_bones, main_armature_entity) = get_main_skeleton_bones_and_armature(
         scene_entities_by_name,
@@ -40,6 +45,7 @@ pub fn assemble_parts(
                 &part_scene_entity,
                 &main_armature_entity,
                 &main_skeleton_bones,
+                &mut attached_parts_reparented_entities,
             );
         }
     }
